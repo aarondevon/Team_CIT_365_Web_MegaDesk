@@ -20,9 +20,49 @@ namespace CIT_365_Web_MegaDesk.Pages.Quotes
 
         public IList<Quote> Quote { get;set; }
 
-        public async Task OnGetAsync()
+        public string CustomerSort { get; set; }
+
+        public string DateSort { get; set; }
+
+        public string CurrentFilter { get; set; }
+
+        public string CurrentSort { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string SearchCustomer { get; set; }
+
+        public async Task OnGetAsync(string sortOrder)
         {
-            Quote = await _context.Quote.ToListAsync();
+            var customers = from m in _context.Quote select m;
+
+            //Sort
+            CustomerSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            DateSort = sortOrder == "Date" ? "date_desc" : "";
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    customers = customers.OrderByDescending(s => s.FirstName);
+                    break;
+                case "Date":
+                    customers = customers.OrderBy(s => s.QuoteDate);
+                    break;
+                case "date_desc":
+                    customers = customers.OrderByDescending(s => s.QuoteDate);
+                    break;
+                default:
+                    customers = customers.OrderBy(s => s.FirstName);
+                    break;
+            }
+
+            //Search
+            if (!string.IsNullOrEmpty(SearchCustomer))
+            {
+                customers = customers.Where(s => s.FirstName.Contains(SearchCustomer));
+            }
+            //Quote = await _context.Quote.ToListAsync();
+            Quote = await customers.ToListAsync();
         }
     }
 }
