@@ -35,9 +35,15 @@ namespace CIT_365_Web_MegaDesk.Pages.Quotes
         [BindProperty(SupportsGet = true)]
         public int GetRushDays { get; set; }
 
+        public int DeskSurfaceArea { get; set; }
+
         public int BasePrice { get; set; }
 
-        public int materialPrice { get; set; }
+        public int SurfaceAreaPrice { get; set; }
+        public int MaterialPrice { get; set; }
+
+        public int DrawerPrice { get; set; }
+        public int RushOrderPrice { get; set; }
 
         [BindProperty]
         public Quote Quote { get; set; }
@@ -51,36 +57,95 @@ namespace CIT_365_Web_MegaDesk.Pages.Quotes
         {
             BasePrice = 200;
 
+            DeskSurfaceArea = Quote.Width * Quote.Depth;
+
+            DrawerPrice = 50 * Quote.Drawers;
+
+            SurfaceAreaPrice = 0;
+
+            GetRushDays = Quote.Rushdays;
+
+            if (DeskSurfaceArea > 1000)
+            {
+                SurfaceAreaPrice = DeskSurfaceArea;
+            }
+
             switch (Quote.DeskMaterial)
             {
                 case "Oak":
-                    materialPrice = 200;
+                    MaterialPrice = 200;
                     break;
                 case "Laminate":
-                    materialPrice = 100;
+                    MaterialPrice = 100;
                     break;
                 case "Pine":
-                    materialPrice = 50;
+                    MaterialPrice = 50;
                     break;
                 case "Rosewood":
-                    materialPrice = 300;
+                    MaterialPrice = 300;
                     break;
                 case "Veneer":
-                    materialPrice = 125;
+                    MaterialPrice = 125;
                     break;
             }
 
-            Quote.QuoteDate = DateTime.Now;
-            Quote.DeskTopArea = Quote.Width * Quote.Depth;
+            if (GetRushDays == 3)
+            {
+                if (DeskSurfaceArea > 2000)
+                {
+                    RushOrderPrice = 80;
+                }
+                else if (DeskSurfaceArea >= 1000 && DeskSurfaceArea <= 2000)
+                {
+                    RushOrderPrice = 70;
+                }
+                else
+                {
+                    RushOrderPrice = 60;
+                }
+            }
 
-            Quote.QuoteTotal = BasePrice + materialPrice;
+            if(GetRushDays == 5)
+            {
+                if (DeskSurfaceArea > 2000)
+                {
+                    RushOrderPrice = 60;
+                }
+                else if (DeskSurfaceArea >= 1000 && DeskSurfaceArea <= 2000)
+                {
+                    RushOrderPrice = 50;
+                }
+                else
+                {
+                    RushOrderPrice = 40;
+                }
+            }
+
+            if (GetRushDays == 7)
+            {
+                if (DeskSurfaceArea > 2000)
+                {
+                    RushOrderPrice = 40;
+                }
+                else if (DeskSurfaceArea >= 1000 && DeskSurfaceArea <= 2000)
+                {
+                    RushOrderPrice = 35;
+                }
+                else
+                {
+                    RushOrderPrice = 30;
+                }
+            }
+
+            Quote.QuoteDate = DateTime.Now;
+            Quote.DeskTopArea = DeskSurfaceArea;
+
+            Quote.QuoteTotal = BasePrice + MaterialPrice + RushOrderPrice + SurfaceAreaPrice + DrawerPrice;
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-
-         
             _context.Quote.Add(Quote);
             await _context.SaveChangesAsync();
 
