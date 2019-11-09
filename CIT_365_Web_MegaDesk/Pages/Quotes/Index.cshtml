@@ -65,6 +65,9 @@
                 @Html.DisplayFor(modelItem => item.Depth)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.DeskTopArea)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Drawers)
             </td>
             <td>
@@ -72,6 +75,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Rushdays)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuoteTotal)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
