@@ -33,12 +33,12 @@ namespace CIT_365_Web_MegaDesk.Pages.Quotes
 
         public async Task OnGetAsync(string sortOrder)
         {
-            var customers = from m in _context.Quote select m;
+            var customers = from m in _context.Quote
+                          select m;
 
             //Sort
             CustomerSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-
-            DateSort = sortOrder == "Date" ? "date_desc" : "";
+            DateSort = sortOrder == "Date" ? "date_desc" : "Date";
 
             switch (sortOrder)
             {
