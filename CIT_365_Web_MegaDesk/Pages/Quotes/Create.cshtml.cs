@@ -21,7 +21,6 @@ namespace CIT_365_Web_MegaDesk.Pages.Quotes
 
         public IActionResult OnGet()
         {
-            
             SetQuoteDate = DateTime.Now;
             return Page();
         }
